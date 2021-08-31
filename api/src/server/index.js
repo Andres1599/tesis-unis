@@ -7,14 +7,14 @@ module.exports = (config, logger) => {
 
     const app = express()
     // const dataBase = require('../database')(config);
-    const response = require('../utils/response')(logger);
+    const response = require('../utils/messages')(logger);
     app
         .use(helmet())
         .use(compression())
         .use(cors())
         .use(express.urlencoded({ extended: true }))
         .use(express.json())
-        .use('/api/', require('../routes')(app, dataBase.models, response, config, logger))
+        .use('/api/', require('../routes')(app, response, config, logger))
 
     return {
         app,
