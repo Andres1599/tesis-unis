@@ -15,7 +15,7 @@ module.exports = (config, logger) => {
         .use(cors())
         .use(express.urlencoded({ extended: true }))
         .use(express.json())
-        .use('/api/', require('../routes')(app, response, config, logger))
+        .use('/api/', require('../routes')({app, response, config, logger, web3}))
 
     return {
         app,
