@@ -10,5 +10,6 @@ module.exports = {
     authSecret: process.env.SECRET,
     authSession: {
         session: false
-    }
+    },
+    url_provider: process.env.PROVIDER,
 }

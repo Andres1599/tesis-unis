@@ -8,6 +8,7 @@ module.exports = (config, logger) => {
     const app = express()
     // const dataBase = require('../database')(config);
     const response = require('../utils/messages')(logger);
+    const web3 = require('../utils/web3')({config});
     app
         .use(helmet())
         .use(compression())
