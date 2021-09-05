@@ -31,7 +31,7 @@ contract NoDeliveryOrder {
         // get order 
         OrderInConflict storage order = orders[_orderToken];
         // if order exist
-        if (order.state) {
+        if (keccak256(bytes(order.state)) == keccak256(bytes(""))) {
             _;
         } else {
             revert();
@@ -52,7 +52,7 @@ contract NoDeliveryOrder {
     }
 
     // get order in conflict 
-    function getOrderInConflict(string memory _orderToken) public view  returns (string memory) {
+    function getOrderInConflict(string memory _orderToken) public view returns (string memory) {
         // get order
         OrderInConflict memory order = orders[_orderToken];
         // return timestamp and state
@@ -60,7 +60,7 @@ contract NoDeliveryOrder {
     }
 
     // function to update the state of the order
-    function updateOrderState(string memory _orderToken, string memory _state) external {
+    function updateOrderState(string calldata _orderToken, string calldata _state) external orderExist(_orderToken) {
         // get order
         OrderInConflict memory order = orders[_orderToken];
         // update state
@@ -72,7 +72,7 @@ contract NoDeliveryOrder {
     }
 
     // function tu update isRecivedByConsumer
-    function updateIsRecivedByConsumer(string memory _orderToken, bool _isRecivedByConsumer) external {
+    function updateIsRecivedByConsumer(string calldata _orderToken, bool _isRecivedByConsumer) external orderExist(_orderToken) {
         // get order
         OrderInConflict memory order = orders[_orderToken];
         // update isRecivedByConsumer
@@ -82,7 +82,7 @@ contract NoDeliveryOrder {
     }
 
     // function to update isDeliveryBySupplier
-    function updateIsDeliveryBySupplier(string memory _orderToken, bool _isDeliveryBySupplier) external {
+    function updateIsDeliveryBySupplier(string calldata _orderToken, bool _isDeliveryBySupplier) external orderExist(_orderToken) {
         // get order
         OrderInConflict memory order = orders[_orderToken];
         // update isDeliveryBySupplier
