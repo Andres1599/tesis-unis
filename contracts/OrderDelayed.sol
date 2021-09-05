@@ -25,7 +25,7 @@ contract OrderDelayed {
         _;
     }
 
-    constructor() {
+    constructor() public {
         owner = msg.sender;
     }
 

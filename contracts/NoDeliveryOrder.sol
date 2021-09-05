@@ -15,5 +15,5 @@ contract NoDeliveryOrder {
         StateOrder state;
     }
     
-    constructor() {}
+    constructor() public {}
 }
