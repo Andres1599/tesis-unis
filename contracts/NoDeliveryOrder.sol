@@ -3,17 +3,42 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract NoDeliveryOrder {
 
-    // struct to define the current state of a order
-    struct StateOrder {
-        uint256 times;
-        string status;
-    }
+    // this is the owner of the contract
+    address private owner;
     
-    // struct to define a order to be processed
-    struct Order {
-        uint orderToken;
-        StateOrder state;
+    // struct to define a order to be processed and have issues
+    struct OrderInConflict {
+        uint state;
+        uint timestamp;
     }
+
+    // mapping of orderId to order
+    mapping(string => OrderInConflict) private orders;
+
+    // count orders
+    uint private orderCount;
+
+    // modify only owner
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    } 
     
-    constructor() public {}
+    // constructor of the contract
+    constructor() public {
+        owner = msg.sender;
+    }
+
+    // create a new order
+    function createOrder(string memory _orderToken, uint _state, uint _timestamp) public payable{
+        orders[_orderToken] = OrderInConflict(_state, _timestamp);
+    }
+
+    // get order in conflict 
+    function getOrderInConflict(string memory _orderToken) public view  returns (uint timestamp, uint state) {
+        // get order
+        OrderInConflict memory order = orders[_orderToken];
+        // return timestamp and state
+        return (order.timestamp, order.state);
+    }
 }
