@@ -1,3 +1,16 @@
 module.exports = {
-    
+    ERR_INVALID_PARAMETER: 'Parámetro inválido',
+    ERR_CANNOT_GET: 'No se puede obtener el recurso solicitado',
+    ERR_CANNOT_CREATE: 'No se puede crear el recurso',
+    ERR_CANNOT_UPDATE: 'No se puede actualizar el recurso',
+    ERR_CANNOT_DELETE: 'No se puede eliminar el recurso',
+    ERR_SERVER: 'Error del servidor',
+    MESSAGE_CREATED: 'Recurso creado',
+    MESSAGE_GET: 'Recurso obtenido',
+    MESSAGE_UPDATED: 'Recurso actualizado',
+    MESSAGE_DELETED: 'Recurso eliminado',
+    MESSAGE_NOT_FOUND: 'Recurso no encontrado',
+    MESSAGE_ORDER_CANCELLED: 'Orden cancelada',
+    MESSAGE_ORDER_COMPLETED: 'Orden completada',
+    MESSAGE_ORDER_PAID: 'Orden pagada',
 }

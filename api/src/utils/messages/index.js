@@ -12,7 +12,7 @@ module.exports = (logger) => {
             return Object.assign({
                 ok: false,
                 message: error.message,
-                data: null
+                data: error
             })
         }
     }

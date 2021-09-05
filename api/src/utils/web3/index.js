@@ -12,13 +12,13 @@ module.exports = ({config}) => {
     const OrderDelayedData = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../../build/data/OrderDelayed.json'), 'utf8'))
 
     // instance of web3 
-    const web3 = new w3(config.provider)
+    const web3Instance = new w3(new w3.providers.HttpProvider(config.url_provider))
 
     return {
-        web3,
+        web3: web3Instance,
         contracts: {
-            NoDeliveryOrder: new web3.eth.Contract(NoDeliveryOrder.abi, NoDeliveryOrderData.address),
-            OrderDelivery: new web3.eth.Contract(OrderDelayed.abi, OrderDelayedData.address)
+            NoDeliveryOrder: new web3Instance.eth.Contract(NoDeliveryOrder.abi, NoDeliveryOrderData.address),
+            OrderDelivery: new web3Instance.eth.Contract(OrderDelayed.abi, OrderDelayedData.address)
         },
     }
 
