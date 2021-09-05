@@ -31,11 +31,8 @@ contract NoDeliveryOrder {
         // get order 
         OrderInConflict storage order = orders[_orderToken];
         // if order exist
-        if (keccak256(bytes(order.state)) == keccak256(bytes(""))) {
-            _;
-        } else {
-            revert();
-        }
+        require(keccak256(bytes(order.state)) == keccak256(bytes("")), "Order does not exist");
+        _;
     }
 
     // create event to emit current state of order
