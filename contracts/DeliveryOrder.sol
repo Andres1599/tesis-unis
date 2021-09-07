@@ -74,8 +74,8 @@ contract DeliveryOrder {
     }
 
     // create a function to consult the state of the order
-    function getOrderState(uint256 _orderId) public view isOrder(_orderId) returns(string memory) {
-        return order.state;
+    function getOrderState(uint256 _orderId) public view isOrder(_orderId) returns(Order memory) {
+        return order;
     }
 
 }
