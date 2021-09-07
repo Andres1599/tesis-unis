@@ -13,6 +13,9 @@ module.exports = ({app,response,config,logger,utilEth}) => {
     const orderCtl = require('../controllers/order')({utilEth,app,response,message})
     const deliveryOrderCtl = require('../controllers/contract/deliveryOrder.js')({utilEth,app,response,message});
     const orderIssuesPaymentCtl = require('../controllers/contract/orderIssuesPayment')({utilEth,app,response,message});
+    const servicesCtl = require('../controllers/services')({utilEth,app,response,message});
+
+    routes.get('/account', servicesCtl.getAccount);
 
     routes.post('/order/', orderCtl.create);
 

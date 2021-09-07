@@ -6,7 +6,6 @@ contract DeliveryOrder {
     // this is the owner of the contract
     address private owner;
     
-   
     // struct to define a order
     struct Order {
         uint orderId;
