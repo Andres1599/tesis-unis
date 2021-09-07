@@ -12,6 +12,7 @@ contract NoDeliveryOrder {
         bool isDelivery;
         bool isRecivedByConsumer;
         bool isDeliveryBySupplier;
+        uint stimedTime;
     }
 
     // mapping of orderId to order
@@ -44,8 +45,8 @@ contract NoDeliveryOrder {
     }
 
     // create a new order
-    function createOrder(string memory _orderToken, string memory _state) public payable onlyOwner {
-        orders[_orderToken] = OrderInConflict(_state, true, false, false);
+    function createOrder(string memory _orderToken, string memory _state, uint _stimedTime) public payable onlyOwner {
+        orders[_orderToken] = OrderInConflict(_state, true, false, false, _stimedTime);
     }
 
     // get order in conflict 

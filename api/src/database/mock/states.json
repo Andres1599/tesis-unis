@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "state": "Enviado",
+        "priority": "Media"
+    },
+    {
+        "id": 2,
+        "state": "Entregado",
+        "priority": "Media"
+    },
+    {
+        "id": 3,
+        "state": "Cancelado",
+        "priority": "Alta"
+    },
+    {
+        "id": 4,
+        "state": "No entregado repartidor",
+        "priority": "Alta"
+    },
+    {
+        "id": 5,
+        "state": "No recibido usuario",
+        "priority": "Alta"
+    }
+]

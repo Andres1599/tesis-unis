@@ -6,7 +6,7 @@ module.exports = ({
     response,
     config,
     logger,
-    web3
+    utilEth
 }) => {
 
     const swaggerSpec = require('../utils/docs')(app)
@@ -16,14 +16,12 @@ module.exports = ({
         routes.use(httpLogger)
     }
 
-    const noDeliveryOrderController = require('../controllers/contract/noDeliveryOrder.js')({
-        web3,
-        app,
-        response,
-        message
-    });
+    const noDeliveryOrderCtl = require('../controllers/contract/noDeliveryOrder.js')({utilEth,app,response,message});
 
-    routes.get('/accounts', noDeliveryOrderController.getAccounts);
+    routes.get('/accounts', noDeliveryOrderCtl.getAccounts);
+    routes.get('/no/delivery/', noDeliveryOrderCtl.getStateContract);
+    routes.post('/no/delivery/consumer', noDeliveryOrderCtl.updateStateConsumer);
+    routes.post('/no/delivery/supplier', noDeliveryOrderCtl.updateStateSupplier);
 
     return routes;
 };
