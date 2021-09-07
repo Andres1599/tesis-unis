@@ -18,6 +18,7 @@ module.exports = ({app,response,config,logger,utilEth}) => {
 
     routes.post('/order/', servicesCtl.getAccount, servicesCtl.deployDo, orderCtl.create);
     routes.get('/orders/', orderCtl.getOrders);
+    routes.get('/order/state/:id', servicesCtl.getAccount, orderCtl.getStateOrder);
 
     routes.get('/state/', deliveryOrderCtl.getStateContract);
     routes.post('/state/delivery/consumer', deliveryOrderCtl.updateStateConsumer);

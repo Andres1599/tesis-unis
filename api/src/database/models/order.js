@@ -31,8 +31,19 @@ const saveOrder = async (order) => {
     }
 }
 
+const getOrderById = async (id) => {
+    try {
+        const data = await getDataOrders()
+        const order = data.find(order => order.orderId === id)
+        return order
+    } catch (error) {
+        return null
+    }
+}
+
 module.exports = {
     getDataOrders,
     saveOrder,
-    getCorrelative
+    getCorrelative,
+    getOrderById
 }

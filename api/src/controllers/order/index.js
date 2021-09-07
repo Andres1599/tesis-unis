@@ -1,8 +1,10 @@
 const time = require('../../utils/time')
 module.exports = ({utilEth,app,response,message, services}) => {
+
     return {
         create: (req, res) => { createOrder({req, res, response, message, services, utilEth}) },
         getOrders: (req, res) => { getOrders({req, res, response, message, services}) },
+        getStateOrder: (req, res) => { getStateOrder({req, res, response, message, services, utilEth}) },
     }
 }
 
@@ -31,6 +33,7 @@ async function createOrder({req, res, response, message, services, utilEth}) {
         const order = {
             orderId: correlative,
             address: result.options.address,
+            interface: interface,
             payOrder: false,
             stimedTime: time.getTime(new Date(stimedTime)),
             userId: userId,
@@ -39,6 +42,29 @@ async function createOrder({req, res, response, message, services, utilEth}) {
         const orderCreated = services.orderService.saveOrder(order);
 
         res.status(200).json(response.success(order,message.MESSAGE_CREATE))
+
+    } catch (error) {
+        res.status(500).send(response.fail(error))
+    }
+}
+
+async function getStateOrder({req, res, response, message, services, utilEth}) {
+    try {
+        const orderId = (req.params.id*1);
+        const {account} = req.body;
+        const order = await services.orderService.getOrderById(orderId);
+
+        const instanceContract = await new utilEth.web3.eth.Contract(order.interface, order.address);
+
+        instanceContract.methods.getOrderState(order.orderId).call({from: account}, function(error, result){
+            
+            if (error) {
+                res.status(500).send(response.fail(error))
+            }
+            
+            res.status(200).json(response.success(result,message.MESSAGE_GET))
+            
+        });
 
     } catch (error) {
         res.status(500).send(response.fail(error))

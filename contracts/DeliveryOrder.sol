@@ -18,7 +18,13 @@ contract DeliveryOrder {
     }
     
     // order 
-    Order order;
+    Order public order;
+
+    // modify the order is correct 
+    modifier isOrder(uint256 _orderId) {
+        require(order.orderId == _orderId, "Order not found");
+        _;
+    }
 
     // modify only owner
     modifier onlyOwner() {
@@ -66,4 +72,10 @@ contract DeliveryOrder {
             emit __OrderState(order);
         }
     }
+
+    // create a function to consult the state of the order
+    function getOrderState(uint256 _orderId) public view isOrder(_orderId) returns(string memory) {
+        return order.state;
+    }
+
 }
