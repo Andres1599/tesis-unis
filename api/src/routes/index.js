@@ -11,14 +11,18 @@ module.exports = ({app,response,config,logger,utilEth}) => {
     }
 
     const orderCtl = require('../controllers/order')({utilEth,app,response,message})
-    const noDeliveryOrderCtl = require('../controllers/contract/noDeliveryOrder.js')({utilEth,app,response,message});
+    const deliveryOrderCtl = require('../controllers/contract/deliveryOrder.js')({utilEth,app,response,message});
+    const orderIssuesPaymentCtl = require('../controllers/contract/orderIssuesPayment')({utilEth,app,response,message});
 
     routes.post('/order/', orderCtl.create);
 
-    routes.get('/accounts', noDeliveryOrderCtl.getAccounts);
-    routes.get('/state/', noDeliveryOrderCtl.getStateContract);
-    routes.post('/state/delivery/consumer', noDeliveryOrderCtl.updateStateConsumer);
-    routes.post('/state/delivery/supplier', noDeliveryOrderCtl.updateStateSupplier);
+    routes.get('/state/', deliveryOrderCtl.getStateContract);
+    routes.post('/state/delivery/consumer', deliveryOrderCtl.updateStateConsumer);
+    routes.post('/state/delivery/supplier', deliveryOrderCtl.updateStateSupplier);
+
+    routes.get('/issues/payment/:id', orderIssuesPaymentCtl.getStateOrderIssuesPayment);
+    routes.put('/issues/payment/:id', orderIssuesPaymentCtl.updateState);
+    routes.post('/issues/payment/cancel', orderIssuesPaymentCtl.closeOrderIssuesPayment);
 
     return routes;
 };
