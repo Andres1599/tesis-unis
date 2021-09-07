@@ -30,9 +30,17 @@ contract DeliveryOrder {
     event __OrderState(Order _order);
     
     // constructor of the contract
-    constructor() public {
+    constructor(uint256 _user, uint256 _orderId, uint256 _time) public {
         // set the owner of the contract on the global variable owner
         owner = msg.sender;
+        // set the order
+        order.userId = _user;
+        order.orderId = _orderId;
+        order.payOrder = false;
+        order.wasDelivery = false;
+        order.wasRecived = false;
+        order.stimedTime = _time;
+        order.state = "created";
     }
 
     // create a privete function to execute a update of the order state after stimedtime is passed 
@@ -57,18 +65,5 @@ contract DeliveryOrder {
             // emit the event
             emit __OrderState(order);
         }
-    }
-
-    // craete a new order
-    function setStateOrder(uint256 _user, uint256 _time, uint256 _orderId) public onlyOwner {
-        order.userId = _user;
-        order.orderId = _orderId;
-        order.payOrder = false;
-        order.wasDelivery = false;
-        order.wasRecived = false;
-        order.stimedTime = _time;
-        order.state = "created";
-        // emit the event
-        emit __OrderState(order);
     }
 }

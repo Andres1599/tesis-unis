@@ -1,7 +1,7 @@
 const time = require('../../utils/time')
 module.exports = ({utilEth,app,response,message, services}) => {
     return {
-        create: (req, res) => { createOrder({req, res, response, message, services}) },
+        create: (req, res) => { createOrder({req, res, response, message, services, utilEth}) },
         getOrders: (req, res) => { getOrders({req, res, response, message, services}) },
     }
 }
@@ -15,17 +15,25 @@ async function getOrders({req, res, response, message, services}) {
     }
 }
 
-async function createOrder({req, res, response, message, services}) {
+async function createOrder({req, res, response, message, services, utilEth}) {
     try {
 
         const correlative = await services.orderService.getCorrelative()
+        const { account, bytecode, interface, stimedTime, userId  } = req.body;
+
+        const result = await new utilEth.web3.eth.Contract(interface)
+            .deploy({ 
+                data: bytecode,
+                arguments: [userId, correlative, time.getTime(new Date(stimedTime))]
+            })
+            .send({ gas: "1000000", from: account});
 
         const order = {
             orderId: correlative,
-            address: 'asdfx123',
+            address: result.options.address,
             payOrder: false,
-            stimedTime: time.getTime(new Date(req.body.stimedTime)),
-            userId: req.body.userId,
+            stimedTime: time.getTime(new Date(stimedTime)),
+            userId: userId,
         }
 
         const orderCreated = services.orderService.saveOrder(order);

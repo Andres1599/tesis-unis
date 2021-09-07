@@ -16,9 +16,7 @@ module.exports = ({app,response,config,logger,utilEth}) => {
     const orderIssuesPaymentCtl = require('../controllers/contract/orderIssuesPayment')({utilEth,app,response,message,services});
     const servicesCtl = require('../controllers/services')({utilEth,app,response,message});
 
-    routes.get('/account', servicesCtl.getAccount);
-
-    routes.post('/order/', orderCtl.create);
+    routes.post('/order/', servicesCtl.getAccount, servicesCtl.deployDo, orderCtl.create);
     routes.get('/orders/', orderCtl.getOrders);
 
     routes.get('/state/', deliveryOrderCtl.getStateContract);
