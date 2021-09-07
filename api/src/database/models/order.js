@@ -10,12 +10,22 @@ const getDataOrders = () => {
     }
 }
 
+const getCorrelative = async () => {
+    try {
+        const data = await getDataOrders()
+        const correlative = (data.length) + 1
+        return correlative
+    } catch (error) {
+        return 1
+    }
+}
+
 const saveOrder = async (order) => {
     try {
         const data = await getDataOrders()
         data.push(order)
-        const saveOrder = await fs.writeFile(path.join(__dirname, '../mock/orders.json'), JSON.stringify(data), 'utf8')
-        return true
+        const saveOrder = await fs.writeFileSync(path.resolve(__dirname,'../mock/orders.json'), JSON.stringify(data))
+        return saveOrder
     } catch (error) {
         return false
     }
@@ -23,5 +33,6 @@ const saveOrder = async (order) => {
 
 module.exports = {
     getDataOrders,
-    saveOrder
+    saveOrder,
+    getCorrelative
 }
