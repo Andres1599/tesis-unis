@@ -12,17 +12,14 @@ module.exports = ({app,response,config,logger,utilEth}) => {
     }
 
     const orderCtl = require('../controllers/order')({utilEth,app,response,message, services})
-    const deliveryOrderCtl = require('../controllers/contract/deliveryOrder.js')({utilEth,app,response,message});
     const orderIssuesPaymentCtl = require('../controllers/contract/orderIssuesPayment')({utilEth,app,response,message,services});
     const servicesCtl = require('../controllers/services')({utilEth,app,response,message});
 
     routes.post('/order/', servicesCtl.getAccount, servicesCtl.deployDo, orderCtl.create);
     routes.get('/orders/', orderCtl.getOrders);
     routes.get('/order/state/:id', servicesCtl.getAccount, orderCtl.getStateOrder);
-
-    routes.get('/state/', deliveryOrderCtl.getStateContract);
-    routes.post('/state/delivery/consumer', deliveryOrderCtl.updateStateConsumer);
-    routes.post('/state/delivery/supplier', deliveryOrderCtl.updateStateSupplier);
+    routes.put('/order/state/delivery/', servicesCtl.getAccount, orderCtl.updateStateDelivery);
+    // routes.put('/order/state/recived/', );
 
     routes.get('/issues/payment/:id', orderIssuesPaymentCtl.getStateOrderIssuesPayment);
     routes.put('/issues/payment/:id', orderIssuesPaymentCtl.updateState);
