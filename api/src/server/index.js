@@ -8,13 +8,15 @@ module.exports = (config, logger) => {
     const app = express()
     // const dataBase = require('../database')(config);
     const response = require('../utils/messages')(logger);
+    const web3Instance = require('../utils/web3')({config});
+
     app
         .use(helmet())
         .use(compression())
         .use(cors())
         .use(express.urlencoded({ extended: true }))
         .use(express.json())
-        .use('/api/', require('../routes')(app, response, config, logger))
+        .use('/api', require('../routes')({app, response, config, logger, web3Instance}))
 
     return {
         app,
