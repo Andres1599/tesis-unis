@@ -19,6 +19,7 @@ contract DeliveryOrder {
     
     // order 
     Order public order;
+    uint256 limitTime;
 
     // modify the order is correct 
     modifier isOrder(uint256 _orderId) {
@@ -42,7 +43,7 @@ contract DeliveryOrder {
     event __OrderState(Order _order);
     
     // constructor of the contract
-    constructor(uint256 _user, uint256 _orderId, uint256 _time) public  isStimedTime(_time) {
+    constructor(uint256 _user, uint256 _orderId, uint256 _stimedTime, uint256 _limitTime) public  isStimedTime(_stimedTime) {
         // set the owner of the contract on the global variable owner
         owner = msg.sender;
         // set the order
@@ -51,43 +52,32 @@ contract DeliveryOrder {
         order.payOrder = false;
         order.wasDelivery = false;
         order.wasRecived = false;
-        order.stimedTime = _time;
+        order.stimedTime = _stimedTime;
         order.state = "created";
+        limitTime = _limitTime;
     }
 
     // create a privete function to execute a update of the order state after stimedtime is passed 
-    function updateOrderState() private {
+    function updateOrderState(uint256 _time) private {
         // get the time of the execution
-        uint256 time = block.timestamp;
-        // get the time of the order
-        uint256 orderTime = order.stimedTime;
-        // get the time difference between the execution and the order
-        uint256 timeDiff = time - orderTime;
-        
-        // if the time difference is greater than the stimed time
-        if(timeDiff > order.stimedTime) {
+        uint256 time = block.timestamp + order.stimedTime;
+        if(time < _time) {
             // update the state of the order
             order.state = "delayed order";
-            // if the time difference is grated than 20% of the stimed time
-            /* if(timeDiff > (order.stimedTime * 20/100)) {
-                // update the state of the order
-                order.state = "canceled order";
-                order.payOrder = false;
-            } */
         }
-
+        
+        if (order.wasDelivery) {
+            order.state = "delivered";
+        }
+        
+        if (order.wasRecived) {
+            order.state = "recived";
+        }
         // if the order is delivery and recived
         if (order.wasDelivery && order.wasRecived) {
             order.state = "finished order";
             order.payOrder = true;
         }
-
-        // if the order is delivery and not recived
-        if (order.wasDelivery && !order.wasRecived) {
-            order.state = "delivered order conflic | cancel";
-            order.payOrder = false;
-        }
-
         emit __OrderState(order);
     }
 
@@ -97,15 +87,31 @@ contract DeliveryOrder {
     }
 
     // update state delivery
-    function updateDelivery(uint256 _orderId) public isOrder(_orderId) {
+    function updateDelivery(uint256 _orderId, uint256 _time) public isOrder(_orderId) {
+        require(!order.wasDelivery, "Order already delivered");
         order.wasDelivery = true;
-        updateOrderState();
+        order.state = "order delivery";
+        updateOrderState(_time);
     }
     
     // update state consumer
-    function updateRecived(uint256 _orderId) public isOrder(_orderId) {
+    function updateRecived(uint256 _orderId, uint256 _time) public isOrder(_orderId) {
+        require(!order.wasRecived, "Order already recived");
         order.wasRecived = true;
-        updateOrderState();
+        order.state = "order recived";
+        updateOrderState(_time);   
+    }
+
+    // cancel order if the order is not delivery and expired limit time
+    function cancelOrder(uint256 _orderId) public isOrder(_orderId) onlyOwner() {
+        require(block.timestamp < limitTime, "Order not expired");
+        require(!order.wasDelivery, "Order not delivery");
+        require(!order.wasRecived, "Order not recived");
+        
+        order.state = "canceled order";
+        order.payOrder = false;
+        
+        emit __OrderState(order);
     }
 
 }
