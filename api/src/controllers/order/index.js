@@ -74,7 +74,7 @@ async function getStateOrder({req, res, response, message, services, web3Instanc
             res.status(200).json(response.success({
                 orderId: result[0],
                 wasDelivery: result[1],
-                wasRecived: result[2],
+                wasReceived: result[2],
                 payOrder: result[3],
                 stimedTime: new Date(result[4]),
                 state: result[5], 
