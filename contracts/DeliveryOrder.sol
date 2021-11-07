@@ -8,9 +8,9 @@ contract DeliveryOrder {
     
     // struct to define a order
     struct Order {
-        uint orderId;
+        uint256 orderId;
         bool wasDelivery;
-        bool wasRecived;
+        bool wasReceived;
         bool payOrder;
         uint256 stimedTime;
         string state; 
@@ -43,15 +43,13 @@ contract DeliveryOrder {
     event __OrderState(Order _order);
     
     // constructor of the contract
-    constructor(uint256 _user, uint256 _orderId, uint256 _stimedTime, uint256 _limitTime) public  isStimedTime(_stimedTime) {
-        // set the owner of the contract on the global variable owner
+        constructor(uint256 _user, uint256 _orderId, uint256 _stimedTime, uint256 _limitTime) public  isStimedTime(_stimedTime) {
         owner = msg.sender;
-        // set the order
         order.userId = _user;
         order.orderId = _orderId;
         order.payOrder = false;
         order.wasDelivery = false;
-        order.wasRecived = false;
+        order.wasReceived = false;
         order.stimedTime = _stimedTime;
         order.state = "created";
         limitTime = _limitTime;
@@ -70,11 +68,11 @@ contract DeliveryOrder {
             order.state = "delivered";
         }
         
-        if (order.wasRecived) {
+        if (order.wasReceived) {
             order.state = "recived";
         }
         // if the order is delivery and recived
-        if (order.wasDelivery && order.wasRecived) {
+        if (order.wasDelivery && order.wasReceived) {
             order.state = "finished order";
             order.payOrder = true;
         }
@@ -96,8 +94,8 @@ contract DeliveryOrder {
     
     // update state consumer
     function updateRecived(uint256 _orderId, uint256 _time) public isOrder(_orderId) {
-        require(!order.wasRecived, "Order already recived");
-        order.wasRecived = true;
+        require(!order.wasReceived, "Order already recived");
+        order.wasReceived = true;
         order.state = "order recived";
         updateOrderState(_time);   
     }
@@ -106,7 +104,7 @@ contract DeliveryOrder {
     function cancelOrder(uint256 _orderId) public isOrder(_orderId) onlyOwner() {
         require(block.timestamp < limitTime, "Order not expired");
         require(!order.wasDelivery, "Order not delivery");
-        require(!order.wasRecived, "Order not recived");
+        require(!order.wasReceived, "Order not recived");
         
         order.state = "canceled order";
         order.payOrder = false;

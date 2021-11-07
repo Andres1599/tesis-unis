@@ -9,7 +9,7 @@ const path = require('path')
     }
 
     throw new Error('Database is configuration is required')
-} */
+} */    
 
 const ENV = process.env.NODE_ENV || 'development'
 
